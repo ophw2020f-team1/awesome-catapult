@@ -17,6 +17,24 @@
 <div id="app"></div>
 
 <script type="text/babel">
+
+    function sendRequest(method, url) {
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+            if (request.readyState === 4) { // 成功完成
+                // 判断响应结果:
+                if (request.status === 200) {
+                    // 成功，通过responseText拿到响应的文本:
+                    console.log('send successfully')
+                } else {
+                    console.log('send failed')
+                }
+            }
+        }
+        request.open(method, url)
+        request.send()
+    }
+
     const App = () => {
 
         const [mode, setMode] = React.useState('auto')
@@ -24,38 +42,12 @@
         const onModeChange = (e) => {
             console.log(`change mode to ${e.target.value}`)
             setMode(e.target.value)
-            let request = new XMLHttpRequest();
-            request.onreadystatechange = function () { // 状态发生变化时，函数被回调
-                if (request.readyState === 4) { // 成功完成
-                    // 判断响应结果:
-                    if (request.status === 200) {
-                        // 成功，通过responseText拿到响应的文本:
-                        console.log('send successfully')
-                    } else {
-                        console.log('send failed')
-                    }
-                }
-            }
-            request.open('POST', '/mode/' + mode)
-            request.send()
+            sendRequest('POST', '/mode/' + mode)
         }
 
         const requestShoot = (e) => {
             console.log('click button')
-            let request = new XMLHttpRequest();
-            request.onreadystatechange = function () { // 状态发生变化时，函数被回调
-                if (request.readyState === 4) { // 成功完成
-                    // 判断响应结果:
-                    if (request.status === 200) {
-                        // 成功，通过responseText拿到响应的文本:
-                        console.log('send successfully')
-                    } else {
-                        console.log('send failed')
-                    }
-                }
-            }
-            request.open('POST', '/shoot')
-            request.send()
+            sendRequest('POST', '/shoot')
         }
 
         const requestAngleChange = (e) => {
@@ -65,20 +57,7 @@
                 return
             }
             console.log(`angle: ${angle}`);
-            let request = new XMLHttpRequest();
-            request.onreadystatechange = function () { // 状态发生变化时，函数被回调
-                if (request.readyState === 4) { // 成功完成
-                    // 判断响应结果:
-                    if (request.status === 200) {
-                        // 成功，通过responseText拿到响应的文本:
-                        console.log('send successfully')
-                    } else {
-                        console.log('send failed')
-                    }
-                }
-            }
-            request.open('POST', '/angle/' + angle)
-            request.send()
+            sendRequest('POST', '/angle/' + angle)
         }
 
         return (

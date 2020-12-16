@@ -30,8 +30,8 @@ def shoot():
 
 
 @app.route('/angle/<value>', methods=['POST'])
-def angle():
-    app.logger.info('angle')
+def angle(value):
+    app.logger.info('angle:' + value)
     # todo: 向串口发送改变角度指令
 
     return 'success'
