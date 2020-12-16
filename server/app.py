@@ -24,6 +24,16 @@ def track():
 @app.route('/shoot', methods=['POST'])
 def shoot():
     app.logger.info('shoot')
+    # todo: 向串口发送发射命令
+
+    return "success"
+
+
+@app.route('/mode/<value>', methods=['POST'])
+def mode(value):
+    app.logger.info('mode: ' + value)
+    # todo: 向串口发送改变模式命令
+
     return "success"
 
 
