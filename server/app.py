@@ -14,7 +14,7 @@ def voice():
     return 'success'
 
 @app.route('/track', methods=['POST'])
-def voice():
+def track():
     app.logger.info(flask.request.data)
     return 'success'
 
