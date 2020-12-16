@@ -45,6 +45,10 @@
                         </select>
                     </div>
                 </div>
+                {mode == 'manual' ?
+                    (<button type="button" class="btn btn-primary">发射</button>
+                    ) : null
+                }
             </div>
         )
     }
