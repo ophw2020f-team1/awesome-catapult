@@ -11,6 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
+    <style type="text/css">
+        .inline {
+            display: inline;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,6 +44,7 @@
     const App = () => {
 
         const [mode, setMode] = React.useState('auto')
+        const [angle, setAngle] = React.useState(0)
 
         const onModeChange = (e) => {
             console.log(`change mode to ${e.target.value}`)
@@ -51,13 +58,19 @@
         }
 
         const requestAngleChange = (e) => {
-            const angle = e.target.value
-            if (angle < 0 || angle > 180) {
-                console.log('angle out range!')
-                return
-            }
-            console.log(`angle: ${angle}`);
+            console.log(`request angle: ${angle}`);
             sendRequest('POST', '/angle/' + angle)
+        }
+
+        const onAngleChange = (e) => {
+            if (e.target.value === null) {
+                e.target.value = 0;
+            } else if (e.target.value < 0) {
+                e.target.value = 0
+            } else if (e.target.value > 180) {
+                e.target.value = 180
+            }
+            setAngle(e.target.value)
         }
 
         return (
@@ -84,20 +97,22 @@
                         <div className="container">
                             <br/>
                             <div className="row">
-                                <div className="col-2">
-                                    <h4>角度：</h4>
-                                </div>
-                                <div className="col-auto">
+                                <div className="col-3">
                                     <input type="number" className="form-control"
                                            aria-describedby="angle"
                                            placeholder={'Angle'}
-                                           onChange={requestAngleChange}
+                                           onChange={onAngleChange}
+                                           min="0"
+                                           max="180"
+                                           defaultValue={0}
                                     />
                                 </div>
-                                <div className="col-4">
-                                    <button type="button" className="btn btn-primary col-2" onClick={requestShoot}>发射
-                                    </button>
-                                </div>
+                                <button type="button" className="btn btn-primary col-1"
+                                        onClick={requestAngleChange}>旋转
+                                </button>
+                                <button type="button" className="btn btn-primary col-1 offset-md-1"
+                                        onClick={requestShoot}>发射
+                                </button>
                             </div>
                         </div>
                     ) : null
