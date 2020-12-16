@@ -58,6 +58,29 @@
             request.send()
         }
 
+        const requestAngleChange = (e) => {
+            const angle = e.target.value
+            if (angle < 0 || angle > 180) {
+                console.log('angle out range!')
+                return
+            }
+            console.log(`angle: ${angle}`);
+            let request = new XMLHttpRequest();
+            request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+                if (request.readyState === 4) { // 成功完成
+                    // 判断响应结果:
+                    if (request.status === 200) {
+                        // 成功，通过responseText拿到响应的文本:
+                        console.log('send successfully')
+                    } else {
+                        console.log('send failed')
+                    }
+                }
+            }
+            request.open('POST', '/angle/' + angle)
+            request.send()
+        }
+
         return (
             <div className="container">
                 <div className="row">
@@ -78,7 +101,26 @@
                     </div>
                 </div>
                 {mode === 'manual' ?
-                    (<button type="button" className="btn btn-primary" onClick={requestShoot}>发射</button>
+                    (
+                        <div className="container">
+                            <br/>
+                            <div className="row">
+                                <div className="col-2">
+                                    <h4>角度：</h4>
+                                </div>
+                                <div className="col-auto">
+                                    <input type="number" className="form-control"
+                                           aria-describedby="angle"
+                                           placeholder={'Angle'}
+                                           onChange={requestAngleChange}
+                                    />
+                                </div>
+                                <div className="col-4">
+                                    <button type="button" className="btn btn-primary col-2" onClick={requestShoot}>发射
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     ) : null
                 }
             </div>
