@@ -18,17 +18,27 @@
 
 <script type="text/babel">
     const App = () => {
+
+        const [mode, setMode] = React.useState('auto')
+
+        const onModeChange = (e) => {
+            console.log(`change mode to ${e.target.value}`)
+            setMode(e.target.value)
+        }
+
         return (
             <div className="container">
                 <div className="row">
                     <h1>投石机控制器</h1>
                 </div>
+                <br/>
+                <br/>
                 <div className="row">
-                    <div className="col-4">
-                        <h3>模式选择</h3>
+                    <div className="col-2">
+                        <h3>模式选择：</h3>
                     </div>
                     <div className="col-4">
-                        <select className="form-select" aria-label="Default select example">
+                        <select className="form-select" aria-label="Default select example" onChange={onModeChange}>
                             <option value="auto" defaultValue>自动模式</option>
                             <option value="voice">声控模式</option>
                             <option value="manual">手动模式</option>
