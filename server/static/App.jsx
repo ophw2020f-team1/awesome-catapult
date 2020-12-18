@@ -34,26 +34,15 @@ const App = () => {
     }
 
     return (
-        <div className="container">
-            <div className="row">
-                <h1>投石机控制器</h1>
-            </div>
-            <br/>
-            <br/>
-            <div className="row">
-                <div className="col-2">
-                    <h3>模式选择：</h3>
+        <div>
+            <div className="container">
+                <div className="row">
+                    <h1>投石机控制器</h1>
                 </div>
-                <div className="col-4">
-                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}
-                            disabled={disabled}>
-                        <option value="auto" defaultValue>自动模式</option>
-                        <option value="voice">声控模式</option>
-                        <option value="manual">手动模式</option>
-                    </select>
-                </div>
+                <ModeSelector disabled={disabled} onModeChange={onModeChange}/>
+                <br/>
+                {mode === 'manual' ? <ManualController disabled={disabled} disableForm={disableForm}/> : null}
             </div>
-            {mode === 'manual' ? <ManualController disabled={disabled} disableForm={disableForm}/> : null}
         </div>
     )
 }
@@ -108,6 +97,26 @@ function ManualController({disabled, disableForm}) {
                         disabled={disabled}>
                     发射
                 </button>
+            </div>
+        </div>
+    )
+}
+
+function ModeSelector({onModeChange, disabled}) {
+    return (
+        <div className="container">
+            <div className="row">
+                <div className="col-2">
+                    <h3>模式选择：</h3>
+                </div>
+                <div className="col-4">
+                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}
+                            disabled={disabled}>
+                        <option value="auto" defaultValue>自动模式</option>
+                        <option value="voice">声控模式</option>
+                        <option value="manual">手动模式</option>
+                    </select>
+                </div>
             </div>
         </div>
     )
