@@ -29,7 +29,8 @@ const App = () => {
     const onModeChange = (e) => {
         console.log(`change mode to ${e.target.value}`)
         setMode(e.target.value)
-        sendRequest('POST', '/mode/' + mode)
+        console.log(`set mode to ${mode}`)
+        sendRequest('POST', '/mode/' + e.target.value)
         disableForm()
     }
 
@@ -129,11 +130,11 @@ function ModeSelector({onModeChange, disabled}) {
     return (
         <div className="container">
             <div className="row">
-                <div className="col-2">
-                    <h3>模式选择：</h3>
+                <div className="col-3">
+                    <h3>模式</h3>
                 </div>
                 <div className="col-4">
-                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}
+                    <select className="form-select" aria-label="mode" onChange={onModeChange}
                             disabled={disabled}>
                         <option value="auto" defaultValue>自动模式</option>
                         <option value="voice">声控模式</option>

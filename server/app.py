@@ -1,5 +1,9 @@
 from flask import Flask
 import flask
+import serial
+
+# todo: 取消注释
+# ser = serial.Serial('COM3')  # 按实际改
 
 app = Flask(__name__)
 
@@ -24,15 +28,22 @@ def track():
 @app.route('/shoot', methods=['POST'])
 def shoot():
     app.logger.info('shoot')
-    # todo: 向串口发送发射命令
+    # 向串口发送发射命令
+    app.logger.info('serial: l')
+    # todo: 取消注释
+    # ser.write('l'.encode())
 
     return "success"
 
 
 @app.route('/angle/<base>/<gear>', methods=['POST'])
 def angle(base, gear):
-    app.logger.info('angle:' + base + '   ' + gear)
-    # todo: 向串口发送改变角度指令
+    app.logger.info(f'angle: {base},{gear}')
+    # 向串口发送改变角度指令
+    msg = base + ',' + gear
+    app.logger.info('serial: ' + msg)
+    # todo: 取消注释
+    # ser.write(msg.encode())
 
     return 'success'
 
@@ -40,7 +51,10 @@ def angle(base, gear):
 @app.route('/mode/<value>', methods=['POST'])
 def mode(value):
     app.logger.info('mode: ' + value)
-    # todo: 向串口发送改变模式命令
+    # 向串口发送改变模式命令
+    msg = value[:1]
+    app.logger.info('serial: ' + msg)
+    # ser.write(msg.encode())
 
     return "success"
 
