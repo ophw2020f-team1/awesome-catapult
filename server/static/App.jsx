@@ -16,9 +16,7 @@ function sendRequest(method, url) {
 }
 
 const App = () => {
-
     const [mode, setMode] = React.useState('auto')
-    const [angle, setAngle] = React.useState(0)
     const [disabled, setDisabled] = React.useState(false)
 
     const disableForm = () => {
@@ -34,6 +32,34 @@ const App = () => {
         sendRequest('POST', '/mode/' + mode)
         disableForm()
     }
+
+    return (
+        <div className="container">
+            <div className="row">
+                <h1>投石机控制器</h1>
+            </div>
+            <br/>
+            <br/>
+            <div className="row">
+                <div className="col-2">
+                    <h3>模式选择：</h3>
+                </div>
+                <div className="col-4">
+                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}
+                            disabled={disabled}>
+                        <option value="auto" defaultValue>自动模式</option>
+                        <option value="voice">声控模式</option>
+                        <option value="manual">手动模式</option>
+                    </select>
+                </div>
+            </div>
+            {mode === 'manual' ? <ManualController disabled={disabled} disableForm={disableForm}/> : null}
+        </div>
+    )
+}
+
+function ManualController({disabled, disableForm}) {
+    const [angle, setAngle] = React.useState(0)
 
     const requestShoot = (e) => {
         console.log('click button')
@@ -60,53 +86,29 @@ const App = () => {
 
     return (
         <div className="container">
-            <div className="row">
-                <h1>投石机控制器</h1>
-            </div>
-            <br/>
             <br/>
             <div className="row">
-                <div className="col-2">
-                    <h3>模式选择：</h3>
+                <div className="col-3">
+                    <input type="number" className="form-control"
+                           aria-describedby="angle"
+                           placeholder={'Angle'}
+                           onChange={onAngleChange}
+                           value={angle}
+                           min="0"
+                           max="180"
+                    />
                 </div>
-                <div className="col-4">
-                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}
-                            disabled={disabled}>
-                        <option value="auto" defaultValue>自动模式</option>
-                        <option value="voice">声控模式</option>
-                        <option value="manual">手动模式</option>
-                    </select>
-                </div>
+                <button type="button" className="btn btn-primary col-1"
+                        onClick={requestAngleChange}
+                        disabled={disabled}>
+                    旋转
+                </button>
+                <button type="button" className="btn btn-primary col-1 offset-md-1"
+                        onClick={requestShoot}
+                        disabled={disabled}>
+                    发射
+                </button>
             </div>
-            {mode === 'manual' ?
-                (
-                    <div className="container">
-                        <br/>
-                        <div className="row">
-                            <div className="col-3">
-                                <input type="number" className="form-control"
-                                       aria-describedby="angle"
-                                       placeholder={'Angle'}
-                                       onChange={onAngleChange}
-                                       value={angle}
-                                       min="0"
-                                       max="180"
-                                />
-                            </div>
-                            <button type="button" className="btn btn-primary col-1"
-                                    onClick={requestAngleChange}
-                                    disabled={disabled}>
-                                旋转
-                            </button>
-                            <button type="button" className="btn btn-primary col-1 offset-md-1"
-                                    onClick={requestShoot}
-                                    disabled={disabled}>
-                                发射
-                            </button>
-                        </div>
-                    </div>
-                ) : null
-            }
         </div>
     )
 }
