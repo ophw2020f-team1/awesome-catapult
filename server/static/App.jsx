@@ -19,21 +19,32 @@ const App = () => {
 
     const [mode, setMode] = React.useState('auto')
     const [angle, setAngle] = React.useState(0)
+    const [disabled, setDisabled] = React.useState(false)
+
+    const disableForm = () => {
+        setDisabled(true)
+        setTimeout(() => {
+            setDisabled(false)
+        }, 1200)
+    }
 
     const onModeChange = (e) => {
         console.log(`change mode to ${e.target.value}`)
         setMode(e.target.value)
         sendRequest('POST', '/mode/' + mode)
+        disableForm()
     }
 
     const requestShoot = (e) => {
         console.log('click button')
         sendRequest('POST', '/shoot')
+        disableForm()
     }
 
     const requestAngleChange = (e) => {
         console.log(`request angle: ${angle}`);
         sendRequest('POST', '/angle/' + angle)
+        disableForm()
     }
 
     const onAngleChange = (e) => {
@@ -59,7 +70,8 @@ const App = () => {
                     <h3>模式选择：</h3>
                 </div>
                 <div className="col-4">
-                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}>
+                    <select className="form-select" aria-label="Default select example" onChange={onModeChange}
+                            disabled={disabled}>
                         <option value="auto" defaultValue>自动模式</option>
                         <option value="voice">声控模式</option>
                         <option value="manual">手动模式</option>
@@ -76,16 +88,20 @@ const App = () => {
                                        aria-describedby="angle"
                                        placeholder={'Angle'}
                                        onChange={onAngleChange}
+                                       value={angle}
                                        min="0"
                                        max="180"
-                                       defaultValue={0}
                                 />
                             </div>
                             <button type="button" className="btn btn-primary col-1"
-                                    onClick={requestAngleChange}>旋转
+                                    onClick={requestAngleChange}
+                                    disabled={disabled}>
+                                旋转
                             </button>
                             <button type="button" className="btn btn-primary col-1 offset-md-1"
-                                    onClick={requestShoot}>发射
+                                    onClick={requestShoot}
+                                    disabled={disabled}>
+                                发射
                             </button>
                         </div>
                     </div>
