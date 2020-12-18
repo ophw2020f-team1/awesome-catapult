@@ -36,9 +36,11 @@ const App = () => {
     return (
         <div>
             <div className="container">
+                <br/>
                 <div className="row">
                     <h1>投石机控制器</h1>
                 </div>
+                <br/>
                 <ModeSelector disabled={disabled} onModeChange={onModeChange}/>
                 <br/>
                 {mode === 'manual' ? <ManualController disabled={disabled} disableForm={disableForm}/> : null}
@@ -48,7 +50,8 @@ const App = () => {
 }
 
 function ManualController({disabled, disableForm}) {
-    const [angle, setAngle] = React.useState(0)
+    const [baseAngle, setBaseAngle] = React.useState(0)
+    const [gearAngle, setGearAngle] = React.useState(0)
 
     const requestShoot = (e) => {
         console.log('click button')
@@ -57,12 +60,12 @@ function ManualController({disabled, disableForm}) {
     }
 
     const requestAngleChange = (e) => {
-        console.log(`request angle: ${angle}`);
-        sendRequest('POST', '/angle/' + angle)
+        console.log(`request angle: ${baseAngle}, ${gearAngle}`);
+        sendRequest('POST', `/angle/${baseAngle}/${gearAngle}`)
         disableForm()
     }
 
-    const onAngleChange = (e) => {
+    const onBaseAngleChange = (e) => {
         if (e.target.value === null) {
             e.target.value = 0;
         } else if (e.target.value < 0) {
@@ -70,19 +73,39 @@ function ManualController({disabled, disableForm}) {
         } else if (e.target.value > 180) {
             e.target.value = 180
         }
-        setAngle(e.target.value)
+        setBaseAngle(e.target.value)
+    }
+
+    const onGearAngleChange = (e) => {
+        if (e.target.value === null) {
+            e.target.value = 0;
+        } else if (e.target.value < 0) {
+            e.target.value = 0
+        } else if (e.target.value > 180) {
+            e.target.value = 180
+        }
+        setGearAngle(e.target.value)
     }
 
     return (
         <div className="container">
-            <br/>
-            <div className="row">
-                <div className="col-3">
+            <div className="row justify-content-start">
+                <div className="col-2">
                     <input type="number" className="form-control"
-                           aria-describedby="angle"
-                           placeholder={'Angle'}
-                           onChange={onAngleChange}
-                           value={angle}
+                           aria-describedby="底座角度"
+                           placeholder={'底座角度'}
+                           onChange={onBaseAngleChange}
+                           value={baseAngle}
+                           min="0"
+                           max="180"
+                    />
+                </div>
+                <div className="col-2">
+                    <input type="number" className="form-control"
+                           aria-describedby="舵机角度"
+                           placeholder={'舵机角度'}
+                           onChange={onGearAngleChange}
+                           value={gearAngle}
                            min="0"
                            max="180"
                     />
@@ -92,7 +115,7 @@ function ManualController({disabled, disableForm}) {
                         disabled={disabled}>
                     旋转
                 </button>
-                <button type="button" className="btn btn-primary col-1 offset-md-1"
+                <button type="button" className="btn btn-primary col-1" style={{marginLeft: '20px'}}
                         onClick={requestShoot}
                         disabled={disabled}>
                     发射
