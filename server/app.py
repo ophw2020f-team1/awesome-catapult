@@ -1,37 +1,38 @@
 from flask import Flask
 import flask
-import serial
-
-# todo: 取消注释
-# ser = serial.Serial('COM3')  # 按实际改
+import os
 
 app = Flask(__name__)
 
+class Channel:
+    def __init__(self, channelPath) -> None:
+        super().__init__()
+        self.channelPath = channelPath
+
+
+    def read(self):
+        res = ''
+        with open(self.channelPath, 'r') as file:
+            res = file.read()
+            return res
+
+
+    def write(self, msg):
+        with open(self.channelPath, 'w') as file:
+            file.write(msg)
+
+channelPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..\\channel.txt') 
+serverChannel = Channel(channelPath)
 
 @app.route('/')
 def index():
     return flask.render_template('./index.html')
 
 
-@app.route('/voice', methods=['POST'])
-def voice():
-    app.logger.info(flask.request.data)
-    return 'success'
-
-
-@app.route('/track', methods=['POST'])
-def track():
-    app.logger.info(flask.request.data)
-    return 'success'
-
-
 @app.route('/shoot', methods=['POST'])
 def shoot():
     app.logger.info('shoot')
-    # 向串口发送发射命令
-    app.logger.info('serial: l')
-    # todo: 取消注释
-    # ser.write('l'.encode())
+    serverChannel.write('z')
 
     return "success"
 
@@ -39,11 +40,8 @@ def shoot():
 @app.route('/angle/<base>/<gear>', methods=['POST'])
 def angle(base, gear):
     app.logger.info(f'angle: {base},{gear}')
-    # 向串口发送改变角度指令
-    msg = base + ',' + gear
-    app.logger.info('serial: ' + msg)
-    # todo: 取消注释
-    # ser.write(msg.encode())
+    msg = f'{base},{gear}'
+    serverChannel.write(msg)
 
     return 'success'
 
@@ -51,10 +49,8 @@ def angle(base, gear):
 @app.route('/mode/<value>', methods=['POST'])
 def mode(value):
     app.logger.info('mode: ' + value)
-    # 向串口发送改变模式命令
-    msg = value[:1]
-    app.logger.info('serial: ' + msg)
-    # ser.write(msg.encode())
+    value = value[:1]
+    serverChannel.write(value)
 
     return "success"
 
