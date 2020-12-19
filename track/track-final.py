@@ -4,6 +4,7 @@ from moocxing.package import MOOCXING
 from moocxing.robot.Brain import Brain
 import time
 import mySerial as se
+import os
 
 com= se.comPorts(0)
 a  = se.MXSerial(com,9600)
@@ -50,6 +51,49 @@ mode = 2
 
 last = 0
 
+
+class Channel:
+    def __init__(self, channelPath) -> None:
+        super().__init__()
+        self.channelPath = channelPath
+
+
+    def read(self):
+        res = ''
+        with open(self.channelPath, 'r') as file:
+            res = file.read()
+            return res
+
+
+    def write(self, msg):
+        with open(self.channelPath, 'w') as file:
+            file.write(msg)
+
+channelPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..\\channel.txt') 
+clientChannel = Channel(channelPath)
+
+def handleChannelMessage():
+    msg = clientChannel.read()
+    if msg == '':
+        return
+    if msg == 'a':
+        print('a')
+        mode = 2
+    elif msg == 'v':
+        print('v')
+        mode = 3
+    elif msg == 'm':
+        print('m')
+        mode = 1
+    elif msg == 'z':
+        print('z')
+        a.send('z')
+    else:
+        print(msg)
+        a.send(msg)
+    clientChannel.write('')
+
+
 cap = cv2.VideoCapture(0)
 while True:
     ret, frame = cap.read()
@@ -69,6 +113,7 @@ while True:
         servo_positionx = 2 * (x) / 480 - 1
         servo_positiony = 2 * (y + h / 2) / 640 - 1
     cv2.imshow('img', img)
+    handleChannelMessage()  # 新加这一行
     key = cv2.waitKey(200)
     if key == ord('q'):
         break
@@ -98,6 +143,7 @@ while True:
         #print("msg:",msg)
         time.sleep(0.8)
     while mode == 3:
+        handleChannelMessage()  # 新加这一行
         result = recordSTT()
         # 请说 发射
         if not brain.query(result, _print=True):
