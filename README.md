@@ -6,8 +6,10 @@
 
 - server: python服务器
 - track:
-  - track-final.py: 串口通信、图像识别和语言识别
-  - servo_run.ino: arduino文件
+  - track.py: 串口通信、图像识别和语言识别
+- servo:
+  - servo_run:
+    - servo_run.ino: arduino文件
 - Hardware: stl文件
 
 ## 项目功能说明
