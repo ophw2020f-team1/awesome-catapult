@@ -37,7 +37,6 @@ void loop(){
     Shoot();
     shoot = false;
     reset();
-    load();
   }
   else{
     temp.replace("\n","") ;
@@ -57,10 +56,8 @@ void loop(){
         servo_2.write(180);
         delay(50);
         servo_4.write(angle[0]);
-        servo_3.write(angle[1]);
-        Serial.println(angle[1]);
+        Serial.println(angle[0]);
         delay(1000);
-        
         servo_5.write(90);
         delay(100);
         angle[0] = 0;
@@ -77,7 +74,6 @@ void Shoot(){
 
 void reset(){
   servo_4.write(90);
-  servo_3.write(90);
   servo_2.write(180);
   delay(1000);
   servo_5.write(90);
@@ -85,7 +81,7 @@ void reset(){
 
 void load(){
   servo_3.write(0);
-  delay(500);
+  delay(50);
   servo_3.write(90);
   delay(50);
 }
