@@ -3,8 +3,9 @@ import cv2
 from moocxing.package import MOOCXING
 from moocxing.robot.Brain import Brain
 import time
-import mySerial as se
+import myserial as se
 import os
+import threading
 
 com= se.comPorts(0)
 a  = se.MXSerial(com,9600)
@@ -74,6 +75,7 @@ clientChannel = Channel(channelPath)
 
 def handleChannelMessage():
     msg = clientChannel.read()
+    global mode
     if msg == '':
         return
     if msg == 'a':
@@ -94,6 +96,16 @@ def handleChannelMessage():
     clientChannel.write('')
 
 
+def handleChannelThread():
+    while True:
+        # print('handleChannelThread')
+        handleChannelMessage()
+        time.sleep(0.2)
+
+
+readChannelThread = threading.Thread(target=handleChannelThread, name='readChannelThread')
+readChannelThread.start()
+
 cap = cv2.VideoCapture(0)
 while True:
     ret, frame = cap.read()
@@ -113,7 +125,6 @@ while True:
         servo_positionx = 2 * (x) / 480 - 1
         servo_positiony = 2 * (y + h / 2) / 640 - 1
     cv2.imshow('img', img)
-    handleChannelMessage()  # 新加这一行
     key = cv2.waitKey(200)
     if key == ord('q'):
         break
@@ -143,7 +154,6 @@ while True:
         #print("msg:",msg)
         time.sleep(0.8)
     while mode == 3:
-        handleChannelMessage()  # 新加这一行
         result = recordSTT()
         # 请说 发射
         if not brain.query(result, _print=True):
